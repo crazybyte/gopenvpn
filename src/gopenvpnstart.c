@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "gopenvpn.h"
@@ -88,6 +89,7 @@ int main(int argc, char *argv[])
 {
 	char *config_file;
 	char *management_port;
+	pid_t pid = 0;
 	
 	if (argc != 3)
 	{
@@ -101,6 +103,9 @@ int main(int argc, char *argv[])
 	/* Validate arguments */
 	check_config_file(config_file);
 	check_management_port(management_port);
+
+	/* Getting PID of the current process */
+	pid = getpid();
 
 	/* Execute OpenVPN */
 	execl(OPENVPN_BINARY_PATH,
@@ -117,6 +122,8 @@ int main(int argc, char *argv[])
 		  management_port,
 		  "--config",
 		  config_file,
+		  "--writepid",
+		  sprintf("%s/openvpn%d.pid", PIDFILE_PATH, pid),
 		  NULL);
 
 	return 0;

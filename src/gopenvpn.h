@@ -29,4 +29,6 @@
 
 #define CONFIG_PATH        "/etc/openvpn"
 
+#define PIDFILE_PATH       "/var/run"
+
 #define MAX_RETRY          10

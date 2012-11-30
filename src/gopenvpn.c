@@ -392,7 +392,7 @@ void vpn_config_start(VPNConfig *self)
 {
 	VPNApplet *applet = self->applet;
 	char *ovpn_args[] = {PKEXEC_BINARY_PATH, OPENVPN_BINARY_PATH, NULL, NULL, NULL, NULL, NULL, NULL,
-			     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+			     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 	int s;
 	pid_t pid;
 	socklen_t namelen;
@@ -447,8 +447,15 @@ void vpn_config_start(VPNConfig *self)
 	pid = fork();
 	if (!pid)
 	{
+		/* Writing OpenVPN PID to file */
+		ovpn_args[14] = "--writepid";
+		ovpn_args[15] = g_strdup_printf("%s/openvpn_%d.pid", PIDFILE_PATH, pid);
+
 		/* Child process */
 		execve(PKEXEC_BINARY_PATH, ovpn_args, NULL);
+
+		g_free(ovpn_args[15]);
+		
 		exit(-1);
 	}
 
