@@ -54,3 +54,5 @@ intltool-update
 *.rej
 *.gmo
 *.scan
+*.sublime-project
+*.sublime-workspace
